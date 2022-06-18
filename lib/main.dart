@@ -137,16 +137,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.person),
-                  title: const Text('Llistar'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const llistar()),
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.person),
                   title: const Text('Buscar'),
                   onTap: () {
                     Navigator.push(
@@ -289,90 +279,6 @@ class _inserirTaxiState extends State<inserirTaxi> {
     Taxi taxis = Taxi.fromMap(row);
     final id = await dbHelper.insert(taxis);
     _showMessageInScaffold('inserir fila id: $id');
-  }
-
-}
-//----------------------LLISTAR-----------------------
-class llistar extends StatelessWidget {
-  const llistar({Key? key}) : super(key: key);
-
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '_title',
-      home: Scaffold(
-        /*appBar: AppBar(title: const Text(_title)),*/
-        body: const llistarTaxi(),
-      ),
-    );
-  }
-}
-
-class llistarTaxi extends StatefulWidget {
-  const llistarTaxi({Key? key}) : super(key: key);
-
-  @override
-  State<llistarTaxi> createState() => _llistarTaxiState();
-}
-
-class _llistarTaxiState extends State<llistarTaxi> {
-  List<Taxi> taxis = [];
-  List<Taxi> nomtaxis = [];
-
-  final dbHelper = DatabaseHelper.instance;
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  void _showMessageInScaffold(String message) {
-    _scaffoldKey.currentState!.showSnackBar(SnackBar(
-      content: Text(message),
-    ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: ListView(
-        children: <Widget>[
-          Container(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: taxis.length + 1,
-              itemBuilder: (BuildContext context, int index) {
-                if (index == taxis.length) {
-                  return RaisedButton(
-                    child: Text('Refresh'),
-                    onPressed: () {
-                      setState(() {
-                        _queryAll();
-                      });
-                    },
-                  );
-                }
-                return Container(
-                  height: 40,
-                  child: Center(
-                    child: Text(
-                      '[${taxis[index].id}] ${taxis[index].model} - ${taxis[index].matricula} matricula',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  void _queryAll() async {
-    final allRows = await dbHelper.queryAllRows();
-    taxis.clear();
-    allRows.forEach((row) => taxis.add(Taxi.fromMap(row)));
-    _showMessageInScaffold('Busqueda feta.');
-    setState(() {});
   }
 
 }
