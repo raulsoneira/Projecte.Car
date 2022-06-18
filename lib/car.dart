@@ -10,7 +10,7 @@ class Taxi {
 
   Taxi(this.id, this.model, this.matricula, this.passatgers);
 
-  Taxi.fromMap(Map<String, dynamic> map) {
+  Taxi.fromMap(Map<String, dynamic> map) { //Creem un nou array amb els resultats de la funcio
     id = map['id'];
     model = map['model'];
     matricula = map['matricula'];

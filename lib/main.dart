@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dbhelper.dart';
 import 'package:projecte_car/car.dart';
 
+void main() => runApp(const MyApp());
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -87,8 +88,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 }
 
-//----------------------inserir,update-----------------------
-void main() => runApp(MyApp());
+//----------------------MENU-----------------------
+
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -96,27 +97,130 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final dbHelper = DatabaseHelper.instance;
 
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+
+          ),
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                DrawerHeader(
+                  decoration: const BoxDecoration(
+                    color: Colors.amber,
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(child:
+                        Image.asset('assets/taxiii.gif')
+                      ),
+                      const Text("Taxi"),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.person),
+                  title: const Text('Inserir'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const inserir()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.person),
+                  title: const Text('Llistar'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const llistar()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.person),
+                  title: const Text('Buscar'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const buscar()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.person),
+                  title: const Text('Actualitzar'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const actualitzar()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.person),
+                  title: const Text('Eliminar'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const eliminar()),
+                    );
+                  },
+                ),
+              ],
+            ),
+
+          )
+      ),
+    );
+
+  }
+}
+
+//----------------------INSERIR-----------------------
+
+class inserir extends StatelessWidget {
+  const inserir({Key? key}) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: '_title',
+        home: Scaffold(
+        /*appBar: AppBar(title: const Text(_title)),*/
+    body: const inserirTaxi(),
+    ),
+    );
+  }
+}
+
+class inserirTaxi extends StatefulWidget {
+  const inserirTaxi({Key? key}) : super(key: key);
+
+  @override
+  State<inserirTaxi> createState() => _inserirTaxiState();
+}
+
+class _inserirTaxiState extends State<inserirTaxi> {
   List<Taxi> taxis = [];
   List<Taxi> nomtaxis = [];
 
-  //controllers used in insert operation UI
   TextEditingController nameController = TextEditingController();
   TextEditingController milesController = TextEditingController();
   TextEditingController passatgersController = TextEditingController();
 
-  //controllers used in update operation UI
-  TextEditingController idUpdateController = TextEditingController();
-  TextEditingController nameUpdateController = TextEditingController();
-  TextEditingController milesUpdateController = TextEditingController();
-  TextEditingController passatgersUpdateController = TextEditingController();
 
-  //controllers used in delete operation UI
-  TextEditingController idDeleteController = TextEditingController();
 
-  //controllers used in query operation UI
-  TextEditingController queryController = TextEditingController();
+  final dbHelper = DatabaseHelper.instance;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -128,132 +232,222 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 5,
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          bottom: TabBar(
-            tabs: [
-              Tab(
-                text: "Inserir",
-              ),
-              Tab(
-                text: "Llistar",
-              ),
-              Tab(
-                text: "Buscar",
-              ),
-              Tab(
-                text: "Actualitzar",
-              ),
-              Tab(
-                text: "Delete",
-              ),
-            ],
-          ),
-          title: Text('TAXIRAUL'),
-        ),
-        body: TabBarView(
-          children: [
-            Center(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Model Taxi',
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(
-                      controller: milesController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Matrícula',
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(
-                      controller: passatgersController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Passatgers',
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    child: Text('Inserir Taxi'),
-                    onPressed: () {
-                      String model = nameController.text;
-                      int matricula = int.parse(milesController.text);
-                      int passatgers = int.parse(passatgersController.text);
-                      _insert(model, matricula, passatgers);
-                    },
-                  ),
-                ],
+    return Padding(
+        padding: const EdgeInsets.all(10),
+        child: ListView(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(20),
+              child: TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Model Taxi',
+                ),
               ),
             ),
             Container(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: taxis.length + 1,
-                itemBuilder: (BuildContext context, int index) {
-                  if (index == taxis.length) {
-                    return RaisedButton(
-                      child: Text('Refresh'),
-                      onPressed: () {
-                        setState(() {
-                          _queryAll();
-                        });
-                      },
-                    );
-                  }
-                  return Container(
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        '[${taxis[index].id}] ${taxis[index].model} - ${taxis[index].matricula} matricula',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  );
-                },
+              padding: EdgeInsets.all(20),
+              child: TextField(
+                controller: milesController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Matrícula',
+                ),
               ),
             ),
-            Center(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(
-                      controller: queryController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Model Taxi',
-                      ),
-                      onChanged: (text) {
-                        if (text.length >= 2) {
-                          setState(() {
-                            _query(text);
-                          });
-                        } else {
-                          setState(() {
-                            nomtaxis.clear();
-                          });
-                        }
-                      },
+            Container(
+              padding: EdgeInsets.all(20),
+              child: TextField(
+                controller: passatgersController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Passatgers',
+                ),
+              ),
+            ),
+            RaisedButton(
+              child: Text('Inserir Taxi'),
+              onPressed: () {
+                String model = nameController.text;
+                int matricula = int.parse(milesController.text);
+                int passatgers = int.parse(passatgersController.text);
+                _insert(model, matricula, passatgers);
+              },
+            ),
+          ],
+        ),
+    );
+      }
+  void _insert(model, matricula, passatgers) async {
+    // row to insert
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnModel: model,
+      DatabaseHelper.columnMatricula: matricula,
+      DatabaseHelper.columnPassatger: passatgers,
+    };
+    Taxi taxis = Taxi.fromMap(row);
+    final id = await dbHelper.insert(taxis);
+    _showMessageInScaffold('inserir fila id: $id');
+  }
+
+}
+//----------------------LLISTAR-----------------------
+class llistar extends StatelessWidget {
+  const llistar({Key? key}) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: '_title',
+      home: Scaffold(
+        /*appBar: AppBar(title: const Text(_title)),*/
+        body: const llistarTaxi(),
+      ),
+    );
+  }
+}
+
+class llistarTaxi extends StatefulWidget {
+  const llistarTaxi({Key? key}) : super(key: key);
+
+  @override
+  State<llistarTaxi> createState() => _llistarTaxiState();
+}
+
+class _llistarTaxiState extends State<llistarTaxi> {
+  List<Taxi> taxis = [];
+  List<Taxi> nomtaxis = [];
+
+  final dbHelper = DatabaseHelper.instance;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void _showMessageInScaffold(String message) {
+    _scaffoldKey.currentState!.showSnackBar(SnackBar(
+      content: Text(message),
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: ListView(
+        children: <Widget>[
+          Container(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(8),
+              itemCount: taxis.length + 1,
+              itemBuilder: (BuildContext context, int index) {
+                if (index == taxis.length) {
+                  return RaisedButton(
+                    child: Text('Refresh'),
+                    onPressed: () {
+                      setState(() {
+                        _queryAll();
+                      });
+                    },
+                  );
+                }
+                return Container(
+                  height: 40,
+                  child: Center(
+                    child: Text(
+                      '[${taxis[index].id}] ${taxis[index].model} - ${taxis[index].matricula} matricula',
+                      style: TextStyle(fontSize: 18),
                     ),
-                    height: 100,
                   ),
-                  Container(
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  void _queryAll() async {
+    final allRows = await dbHelper.queryAllRows();
+    taxis.clear();
+    allRows.forEach((row) => taxis.add(Taxi.fromMap(row)));
+    _showMessageInScaffold('Busqueda feta.');
+    setState(() {});
+  }
+
+}
+
+//----------------------BUSCAR-----------------------
+class buscar extends StatelessWidget {
+  const buscar({Key? key}) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: '_title',
+      home: Scaffold(
+        /*appBar: AppBar(title: const Text(_title)),*/
+        body: const buscarTaxi(),
+      ),
+    );
+  }
+}
+
+class buscarTaxi extends StatefulWidget {
+  const buscarTaxi({Key? key}) : super(key: key);
+
+  @override
+  State<buscarTaxi> createState() => _buscarTaxiState();
+}
+
+class _buscarTaxiState extends State<buscarTaxi> {
+  List<Taxi> taxis = [];
+  List<Taxi> nomtaxis = [];
+
+  TextEditingController queryController = TextEditingController();
+
+
+
+  final dbHelper = DatabaseHelper.instance;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void _showMessageInScaffold(String message) {
+    _scaffoldKey.currentState!.showSnackBar(SnackBar(
+      content: Text(message),
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: ListView(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(20),
+            child: TextField(
+              controller: queryController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Model Taxi',
+              ),
+              onChanged: (text) {
+                if (text.length >= 2) {
+                  setState(() {
+                    _query(text);
+                  });
+                } else {
+                  setState(() {
+                    nomtaxis.clear();
+                  });
+                }
+              },
+            ),
+            height: 100,
+          ),
+          Container(
                     height: 300,
                     child: ListView.builder(
                       padding: const EdgeInsets.all(8),
@@ -271,127 +465,200 @@ class _MyHomePageState extends State<MyHomePage> {
                         );
                       },
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Center(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(
-                      controller: idUpdateController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Taxi id',
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(
-                      controller: nameUpdateController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Model Taxi',
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(
-                      controller: milesUpdateController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Matrícula',
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(
-                      controller: passatgersUpdateController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Passatgers',
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    child: Text('Actualitzar taxi'),
-                    onPressed: () {
-                      int id = int.parse(idUpdateController.text);
-                      String model = nameUpdateController.text;
-                      int matricula = int.parse(milesUpdateController.text);
-                      int passatgers =
-                          int.parse(passatgersUpdateController.text);
-                      _update(id, model, matricula, passatgers);
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Center(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(
-                      controller: idDeleteController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Taxi id',
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    child: Text('Eliminar'),
-                    onPressed: () {
-                      int id = int.parse(idDeleteController.text);
-                      _delete(id);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-
-  void _insert(model, matricula, passatgers) async {
-    // row to insert
-    Map<String, dynamic> row = {
-      DatabaseHelper.columnModel: model,
-      DatabaseHelper.columnMatricula: matricula,
-      DatabaseHelper.columnPassatger: passatgers,
-    };
-    Taxi taxis = Taxi.fromMap(row);
-    final id = await dbHelper.insert(taxis);
-    _showMessageInScaffold('inserir fila id: $id');
-  }
-
-  void _queryAll() async {
-    final allRows = await dbHelper.queryAllRows();
-    taxis.clear();
-    allRows.forEach((row) => taxis.add(Taxi.fromMap(row)));
-    _showMessageInScaffold('Busqueda feta.');
-    setState(() {});
-  }
-
   void _query(model) async {
     final allRows = await dbHelper.queryRows(model);
     nomtaxis.clear();
     allRows.forEach((row) => nomtaxis.add(Taxi.fromMap(row)));
   }
+}
+
+//----------------------ACTUALITZAR-----------------------
+class actualitzar extends StatelessWidget {
+  const actualitzar({Key? key}) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: '_title',
+      home: Scaffold(
+        /*appBar: AppBar(title: const Text(_title)),*/
+        body: const actualitzarTaxi(),
+      ),
+    );
+  }
+}
+
+class actualitzarTaxi extends StatefulWidget {
+  const actualitzarTaxi({Key? key}) : super(key: key);
+
+  @override
+  State<actualitzarTaxi> createState() => _actualitzarTaxiState();
+}
+
+class _actualitzarTaxiState extends State<actualitzarTaxi> {
+  List<Taxi> taxis = [];
+  List<Taxi> nomtaxis = [];
+
+  TextEditingController idUpdateController = TextEditingController();
+  TextEditingController nameUpdateController = TextEditingController();
+  TextEditingController milesUpdateController = TextEditingController();
+  TextEditingController passatgersUpdateController = TextEditingController();
+
+
+  final dbHelper = DatabaseHelper.instance;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void _showMessageInScaffold(String message) {
+    _scaffoldKey.currentState!.showSnackBar(SnackBar(
+      content: Text(message),
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: ListView(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(20),
+            child: TextField(
+              controller: idUpdateController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Taxi id',
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(20),
+            child: TextField(
+              controller: nameUpdateController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Model Taxi',
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(20),
+            child: TextField(
+              controller: milesUpdateController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Matrícula',
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(20),
+            child: TextField(
+              controller: passatgersUpdateController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Passatgers',
+              ),
+            ),
+          ),
+          RaisedButton(
+            child: Text('Actualitzar taxi'),
+            onPressed: () {
+              int id = int.parse(idUpdateController.text);
+              String model = nameUpdateController.text;
+              int matricula = int.parse(milesUpdateController.text);
+              int passatgers =
+              int.parse(passatgersUpdateController.text);
+              _update(id, model, matricula, passatgers);
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   void _update(id, model, matricula, passatgers) async {
     // row to update
-    Taxi car = Taxi(id, model, matricula, passatgers);
-    final rowsAffected = await dbHelper.update(car);
+    Taxi taxi = Taxi(id, model, matricula, passatgers);
+    final rowsAffected = await dbHelper.update(taxi);
     _showMessageInScaffold('Actualitcació $rowsAffected fila(s)');
+  }
+}
+
+
+//----------------------ELIMINAR-----------------------
+class eliminar extends StatelessWidget {
+  const eliminar({Key? key}) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: '_title',
+      home: Scaffold(
+        /*appBar: AppBar(title: const Text(_title)),*/
+        body: const eliminarTaxi(),
+      ),
+    );
+  }
+}
+
+class eliminarTaxi extends StatefulWidget {
+  const eliminarTaxi({Key? key}) : super(key: key);
+
+  @override
+  State<eliminarTaxi> createState() => _eliminarTaxiState();
+}
+
+class _eliminarTaxiState extends State<eliminarTaxi> {
+  List<Taxi> taxis = [];
+  List<Taxi> nomtaxis = [];
+
+  TextEditingController idDeleteController = TextEditingController();
+
+
+  final dbHelper = DatabaseHelper.instance;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void _showMessageInScaffold(String message) {
+    _scaffoldKey.currentState!.showSnackBar(SnackBar(
+      content: Text(message),
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: ListView(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(20),
+            child: TextField(
+              controller: idDeleteController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Taxi id',
+              ),
+            ),
+          ),
+          RaisedButton(
+            child: Text('Eliminar'),
+            onPressed: () {
+              int id = int.parse(idDeleteController.text);
+              _delete(id);
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   void _delete(id) async {
